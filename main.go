@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -11,7 +12,14 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func noteView(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Display a specific note..."))
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil || id < 0 {
+		http.NotFound(w, r)
+		return
+	}
+
+	msg := fmt.Sprintf("Display a specific note with ID %d...", id)
+	w.Write([]byte(msg))
 }
 
 func noteCreate(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +29,7 @@ func noteCreate(w http.ResponseWriter, r *http.Request) {
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/{$}", home)
-	mux.HandleFunc("/notes/view", noteView)
+	mux.HandleFunc("/notes/view/{id}", noteView)
 	mux.HandleFunc("/notes/create", noteCreate)
 
 	fmt.Print("Starting server on :4000")
