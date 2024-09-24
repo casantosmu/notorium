@@ -26,11 +26,16 @@ func noteCreate(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Display a form for creating a new note..."))
 }
 
+func noteCreatePost(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Save a new note..."))
+}
+
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/{$}", home)
-	mux.HandleFunc("/notes/view/{id}", noteView)
-	mux.HandleFunc("/notes/create", noteCreate)
+	mux.HandleFunc("GET /{$}", home)
+	mux.HandleFunc("GET /notes/view/{id}", noteView)
+	mux.HandleFunc("GET /notes/create", noteCreate)
+	mux.HandleFunc("POST /notes/create", noteCreatePost)
 
 	fmt.Print("Starting server on :4000")
 
