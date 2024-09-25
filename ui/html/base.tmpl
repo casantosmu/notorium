@@ -4,16 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <title>{{template "title" .}} - Notorium</title>
+    <link rel="stylesheet" href="/static/css/main.css" />
   </head>
-  <body>
-    <header>
+  <body class="container">
+    <header class="header">
       <h1><a href="/">Notorium</a></h1>
+      {{template "nav" .}}
     </header>
-    {{template "nav" .}}
-    <main>
+    <main class="main">
       {{ template "main" . }}
     </main>
-    <footer>Powered by <a href="https://golang.org/">Go</a></footer>
+    <footer class="footer">
+      Powered by <a href="https://golang.org/">Go</a>
+    </footer>
   </body>
 </html>
 {{ end }}
