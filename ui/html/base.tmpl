@@ -1,24 +1,24 @@
-{{ define "base" }}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>{{ template "title" . }} - Notorium</title>
-    <link rel="stylesheet" href="/static/css/pico.min.css" />
-  </head>
-  <body class="container">
+{{define "base"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>{{template "title" .}} - Notorium</title>
+        <link rel="stylesheet" href="/static/css/pico.min.css"/>
+    </head>
+    <body class="container">
     <header>
-      <nav>
-        <ul>
-          <li><strong>Notorium</strong></li>
-        </ul>
-        {{ template "menu" . }}
-      </nav>
+        <nav>
+            <ul>
+                <li><strong>Notorium</strong></li>
+            </ul>
+            {{template "menu" .}}
+        </nav>
     </header>
     <main>
-      {{ template "main" . }}
+        {{template "main" .}}
     </main>
     <footer>Powered by <a href="https://golang.org/">Go</a></footer>
-  </body>
-</html>
-{{ end }}
+    </body>
+    </html>
+{{end}}

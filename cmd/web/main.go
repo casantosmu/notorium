@@ -13,7 +13,7 @@ import (
 
 type application struct {
 	logger *slog.Logger
-	notes *models.NoteModel
+	notes  *models.NoteModel
 }
 
 func main() {
@@ -24,15 +24,15 @@ func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	db, err := openDB(*pg)
-    if err != nil {
-        logger.Error(err.Error())
-        os.Exit(1)
-    }
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
 	defer db.Close()
 
 	app := &application{
 		logger: logger,
-		notes: &models.NoteModel{DB: db},
+		notes:  &models.NoteModel{DB: db},
 	}
 
 	logger.Info("starting server", "addr", *addr)
@@ -44,15 +44,15 @@ func main() {
 
 func openDB(connStr string) (*sql.DB, error) {
 	db, err := sql.Open("pgx", connStr)
-	if (err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
 	err = db.Ping()
-    if err != nil {
-        db.Close()
-        return nil, err
-    }
+	if err != nil {
+		db.Close()
+		return nil, err
+	}
 
 	return db, nil
 }
