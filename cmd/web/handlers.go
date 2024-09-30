@@ -3,8 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-
-	// "html/template"
 	"net/http"
 	"strconv"
 
@@ -20,26 +18,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, note := range notes {
-		fmt.Fprintf(w, "%+v\n", note)
-	}
+	data := app.newTemplateData(r)
+	data.Notes = notes
 
-	// files := []string{
-	// 	"./ui/html/pages/home.tmpl",
-	// 	"./ui/html/partials/nav.tmpl",
-	// 	"./ui/html/base.tmpl",
-	// }
-
-	// ts, err := template.ParseFiles(files...)
-	// if err != nil {
-	// 	app.serverError(w, r, err)
-	// 	return
-	// }
-
-	// err = ts.ExecuteTemplate(w, "base", nil)
-	// if err != nil {
-	// 	app.serverError(w, r, err)
-	// }
+	app.render(w, r, http.StatusOK, "home.tmpl", data)
 
 }
 
@@ -60,7 +42,10 @@ func (app *application) noteView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%+v", note)
+	data := app.newTemplateData(r)
+	data.Note = note
+
+	app.render(w, r, http.StatusOK, "view.tmpl", data)
 }
 
 func (app *application) noteCreate(w http.ResponseWriter, r *http.Request) {

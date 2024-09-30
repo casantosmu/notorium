@@ -1,1 +1,12 @@
-package pages
+{{define "title"}}Note #{{.Note.ID}}{{end}}
+
+{{define "main"}}
+    {{with .Note}}
+        <div>
+            <h2>{{.Title}} #{{.ID}}</h2>
+            <p>{{.Content}}</p>
+            <div>Created: {{humanDate .CreatedAt}}</div>
+            <div>Expires: {{humanDate .ExpiresAt}}</div>
+        </div>
+    {{end}}
+{{end}}
