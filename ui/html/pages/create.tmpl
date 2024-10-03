@@ -1,0 +1,32 @@
+{{define "title"}}Create a New Note{{end}}
+
+{{define "main"}}
+    <form action='/note/create' method='POST'>
+        <label for='title'>Title:</label>
+        {{with .Form.FieldErrors.title}}
+            <span class='error'>{{.}}</span>
+        {{end}}
+        <input type='text' id='title' name='title' value="{{.Form.Title}}" required>
+
+        <label for='content'>Content:</label>
+        {{with .Form.FieldErrors.content}}
+            <span class='error'>{{.}}</span>
+        {{end}}
+        <textarea id='content' name='content' required>{{.Form.Content}}</textarea>
+
+        <fieldset>
+            <legend>Delete in:</legend>
+            {{with .Form.FieldErrors.expires}}
+                <label class='error'>{{.}}</label>
+            {{end}}
+            <input type='radio' id='expires365' name='expires' value='365' {{if (eq .Form.Expires 365)}}checked{{end}}>
+            <label for='expires365'>One Year</label>
+            <input type='radio' id='expires7' name='expires' value='7' {{if (eq .Form.Expires 7)}}checked{{end}}>
+            <label for='expires7'>One Week</label>
+            <input type='radio' id='expires1' name='expires' value='1' {{if (eq .Form.Expires 1)}}checked{{end}}>
+            <label for='expires1'>One Day</label>
+        </fieldset>
+
+        <input type='submit' value='Publish note'>
+    </form>
+{{end}}
