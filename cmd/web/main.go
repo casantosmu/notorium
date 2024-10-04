@@ -3,13 +3,14 @@ package main
 import (
 	"database/sql"
 	"flag"
-	"github.com/alexedwards/scs/postgresstore"
-	"github.com/alexedwards/scs/v2"
 	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/alexedwards/scs/postgresstore"
+	"github.com/alexedwards/scs/v2"
 
 	"github.com/casantosmu/notorium/internal/models"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -25,6 +26,7 @@ type application struct {
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	pg := flag.String("pg", "postgres://notorium:notorium@localhost:5433/notorium", "Postgres connection string")
+	secure := flag.Bool("secure", true, "Set Secure attribute to session cookies")
 	flag.Parse()
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
@@ -45,6 +47,7 @@ func main() {
 	sessionManager := scs.New()
 	sessionManager.Store = postgresstore.New(db)
 	sessionManager.Lifetime = 12 * time.Hour
+	sessionManager.Cookie.Secure = *secure
 
 	app := &application{
 		logger:         logger,
@@ -53,9 +56,18 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
+	srv := &http.Server{
+		Addr:    *addr,
+		Handler: app.routes(),
+		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		IdleTimeout:  time.Minute,
+        ReadTimeout:  5 * time.Second,
+        WriteTimeout: 10 * time.Second,
+	}
+
 	logger.Info("starting server", "addr", *addr)
 
-	err = http.ListenAndServe(*addr, app.routes())
+	err = srv.ListenAndServe()
 	logger.Error(err.Error())
 	os.Exit(1)
 }
