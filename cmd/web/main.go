@@ -3,19 +3,23 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"github.com/alexedwards/scs/postgresstore"
+	"github.com/alexedwards/scs/v2"
 	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/casantosmu/notorium/internal/models"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type application struct {
-	logger        *slog.Logger
-	notes         *models.NoteModel
-	templateCache map[string]*template.Template
+	logger         *slog.Logger
+	notes          *models.NoteModel
+	templateCache  map[string]*template.Template
+	sessionManager *scs.SessionManager
 }
 
 func main() {
@@ -38,10 +42,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	sessionManager := scs.New()
+	sessionManager.Store = postgresstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+
 	app := &application{
-		logger:        logger,
-		notes:         &models.NoteModel{DB: db},
-		templateCache: templateCache,
+		logger:         logger,
+		notes:          &models.NoteModel{DB: db},
+		templateCache:  templateCache,
+		sessionManager: sessionManager,
 	}
 
 	logger.Info("starting server", "addr", *addr)

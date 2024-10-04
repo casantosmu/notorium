@@ -1,3 +1,16 @@
 .error {
-    color: #D93526
+  color: #d93526;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: white;
+}
+
+.alert-success {
+  background-color: #398712;
+  border: 1px solid #205107;
 }

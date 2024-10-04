@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/casantosmu/notorium/internal/models"
 	"html/template"
 	"net/http"
 	"path/filepath"
 	"time"
+
+	"github.com/casantosmu/notorium/internal/models"
 )
 
 type templateData struct {
@@ -13,6 +14,7 @@ type templateData struct {
 	Note        models.Note
 	Notes       []models.Note
 	Form        any
+	Flash       string
 }
 
 func humanDate(t time.Time) string {
@@ -58,5 +60,6 @@ func newTemplateCache() (map[string]*template.Template, error) {
 func (app *application) newTemplateData(r *http.Request) templateData {
 	return templateData{
 		CurrentYear: time.Now().Year(),
+		Flash:       app.sessionManager.PopString(r.Context(), "flash"),
 	}
 }

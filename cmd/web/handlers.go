@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/casantosmu/notorium/internal/models"
-	"github.com/casantosmu/notorium/internal/validator"
 	"net/http"
 	"strconv"
+
+	"github.com/casantosmu/notorium/internal/models"
+	"github.com/casantosmu/notorium/internal/validator"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +100,8 @@ func (app *application) noteCreatePost(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
+
+	app.sessionManager.Put(r.Context(), "flash", "Note successfully created!")
 
 	http.Redirect(w, r, fmt.Sprintf("/note/view/%d", id), http.StatusSeeOther)
 }

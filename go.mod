@@ -2,7 +2,11 @@ module github.com/casantosmu/notorium
 
 go 1.23.1
 
-require github.com/jackc/pgx/v5 v5.7.1
+require (
+	github.com/alexedwards/scs/postgresstore v0.0.0-20240316134038-7e11d57e8885
+	github.com/alexedwards/scs/v2 v2.8.0
+	github.com/jackc/pgx/v5 v5.7.1
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
