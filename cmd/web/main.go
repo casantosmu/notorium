@@ -19,13 +19,14 @@ import (
 type application struct {
 	logger         *slog.Logger
 	notes          *models.NoteModel
+	users          *models.UserModel
 	templateCache  map[string]*template.Template
 	sessionManager *scs.SessionManager
 }
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	pg := flag.String("pg", "postgres://notorium:notorium@localhost:5433/notorium", "Postgres connection string")
+	pg := flag.String("pg", "postgres://notorium:notorium@localhost:5432/notorium", "Postgres connection string")
 	secure := flag.Bool("secure", true, "Set Secure attribute to session cookies")
 	flag.Parse()
 
@@ -52,17 +53,18 @@ func main() {
 	app := &application{
 		logger:         logger,
 		notes:          &models.NoteModel{DB: db},
+		users:          &models.UserModel{DB: db},
 		templateCache:  templateCache,
 		sessionManager: sessionManager,
 	}
 
 	srv := &http.Server{
-		Addr:    *addr,
-		Handler: app.routes(),
-		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		Addr:         *addr,
+		Handler:      app.routes(),
+		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
 		IdleTimeout:  time.Minute,
-        ReadTimeout:  5 * time.Second,
-        WriteTimeout: 10 * time.Second,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	logger.Info("starting server", "addr", *addr)
